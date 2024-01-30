@@ -25,9 +25,8 @@ public class JwtGenerator {
         Key secretKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
 
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(now)
                 .setExpiration(expirationDate)
+                .claim("user_name", userDetails.getUsername())
                 .signWith(secretKey)
                 .compact();
     }
