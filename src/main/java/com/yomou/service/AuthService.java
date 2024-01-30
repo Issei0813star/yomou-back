@@ -17,6 +17,7 @@ import com.yomou.repository.UserRepository;
 import com.yomou.util.PasswordHashingUtil;
 import com.yomou.util.JwtGenerator;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -27,18 +28,18 @@ public class AuthService implements UserDetailsService {
     private final PasswordHashingUtil passwordHashingUtil;
     private final JwtGenerator jwtGenerator;
 
-    public ResponseEntity<String> login (UserDto dto){
+    public ResponseEntity<Object> login (UserDto dto){
         try{
             UserDetails user = loadUserByUsername(dto.getUserName());
             verifyPassword(dto.getPassword(), user.getPassword());
             String token = jwtGenerator.generateToken(user);
-            return ResponseEntity.ok().body(token);
+            return ResponseEntity.ok().body(Map.of("token", token));
         }
         catch (UserNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ユーザーが存在しません。: " + dto.getUserName());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("errorMessage", "ユーザーが存在しません。: " + dto.getUserName()));
         }
         catch (IncorrectPasswordException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("パスワードが間違っています。");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("errorMessage", "パスワードが間違っています。"));
         }
     }
 
