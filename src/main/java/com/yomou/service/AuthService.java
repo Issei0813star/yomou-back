@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.yomou.entity.UserEntity;
 import com.yomou.dto.UserDto;
 import com.yomou.repository.UserRepository;
-import com.yomou.service.PasswordHashingService;
 
 import java.util.Optional;
 
