@@ -1,14 +1,14 @@
-package com.yomou.service;
+package com.yomou.util;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class PasswordHashingService {
+@Component
+public class PasswordHashingUtil {
 
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public PasswordHashingService() {
+    public PasswordHashingUtil() {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -20,4 +20,3 @@ public class PasswordHashingService {
         return passwordEncoder.matches(plainPassword, hashedPassword);
     }
 }
-
