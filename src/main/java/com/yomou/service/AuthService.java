@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.yomou.entity.UserEntity;
 import com.yomou.dto.UserDto;
 import com.yomou.repository.UserRepository;
+import com.yomou.service.PasswordHashingService;
 
 import java.util.Optional;
 
@@ -18,11 +19,12 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final PasswordHashingService passwordHashingService;
 
     public ResponseEntity<String> login (UserDto dto){
         try{
             UserEntity user = findUserByUserName(dto.getUserName());
-            checkPassword(dto, user);
+            verifyPassword(dto, user);
             return ResponseEntity.ok("TODO トークン返す");
         }
         catch (UserNotFoundException e){
@@ -38,9 +40,8 @@ public class AuthService {
         return userOptional.orElseThrow(() -> new UserNotFoundException("ユーザーが存在しません: " + userName));
     }
 
-    private void checkPassword(UserDto dto, UserEntity user){
-        if (!dto.getPassword().equals(user.getPassword())){
+    private void verifyPassword(UserDto dto, UserEntity user){
+        if (!passwordHashingService.verifyPassword(dto.getPassword(), user.getPassword()))
             throw new IncorrectPasswordException("パスワードが間違っています");
-        }
     }
 }
