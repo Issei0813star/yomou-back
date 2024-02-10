@@ -52,8 +52,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("Authentication error: " + e.getMessage());
         }
     }
 
