@@ -2,10 +2,12 @@ package com.yomou.util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Base64;
@@ -21,13 +23,13 @@ public class JwtGenerator {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + 864000000);
 
-        byte[] apiKeySecretBytes = Base64.getEncoder().encode(SECRET_KEY.getBytes());
-        Key secretKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+        byte[] secretKeyBytes = SECRET_KEY.getBytes();
+        SecretKey key = Keys.hmacShaKeyFor(secretKeyBytes);
 
         return Jwts.builder()
                 .setExpiration(expirationDate)
                 .claim("user_name", userDetails.getUsername())
-                .signWith(secretKey)
+                .signWith(key)
                 .compact();
     }
 }
