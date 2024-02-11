@@ -5,10 +5,6 @@ import com.yomou.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.yomou.entity.UserEntity;
@@ -22,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService implements UserDetailsService {
+public class AuthService{
 
     private final UserRepository userRepository;
     private final PasswordHashingUtil passwordHashingUtil;
@@ -30,7 +26,7 @@ public class AuthService implements UserDetailsService {
 
     public ResponseEntity<Object> login (UserDto dto){
         try{
-            UserDetails user = loadUserByUsername(dto.getUserName());
+            UserEntity user = findUserByEmail(dto.getEmail());
             verifyPassword(dto.getPassword(), user.getPassword());
             String token = jwtGenerator.generateToken(user);
             return ResponseEntity.ok().body(Map.of("token", token));
@@ -43,26 +39,14 @@ public class AuthService implements UserDetailsService {
         }
     }
 
-    private UserEntity findUserByUserName(String userName){
-        Optional<UserEntity> userOptional = userRepository.findByUserName(userName);
-        return userOptional.orElseThrow(() -> new UserNotFoundException("ユーザーが存在しません: " + userName));
+    private UserEntity findUserByEmail(String email){
+        Optional<UserEntity> userOptional = userRepository.findByEmail(email);
+        return userOptional.orElseThrow(() -> new UserNotFoundException("ユーザーが存在しません: " + email));
     }
 
     private void verifyPassword(String plainPassword, String hashedPassword) {
         if (!passwordHashingUtil.verifyPassword(plainPassword, hashedPassword)) {
             throw new IncorrectPasswordException("パスワードが間違っています");
         }
-    }
-
-
-    @Override
-    public UserDetails loadUserByUsername(String userName) {
-
-        UserEntity userEntity = findUserByUserName(userName);
-
-        return User.builder()
-                .username(userEntity.getUserName())
-                .password(userEntity.getPassword())
-                .build();
     }
 }

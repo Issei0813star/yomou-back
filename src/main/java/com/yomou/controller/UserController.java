@@ -1,6 +1,7 @@
 package com.yomou.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public UserEntity createUser (@RequestBody UserDto dto){
+    public ResponseEntity<Object> createUser (@RequestBody UserDto dto){
         return userService.createUser(dto);
     }
 }

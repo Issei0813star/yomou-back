@@ -6,5 +6,5 @@ import com.yomou.entity.UserEntity;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
-    Optional<UserEntity> findByUserName(String userName);
+    Optional<UserEntity> findByEmail(String email);
 }

@@ -11,4 +11,7 @@ public class UserDto {
 
     @JsonProperty
     private String password;
+
+    @JsonProperty
+    private String email;
 }
