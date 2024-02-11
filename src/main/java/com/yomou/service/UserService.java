@@ -5,13 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.yomou.repository.UserRepository;
-import com.yomou.dto.UserDto;
+import com.yomou.dto.UserRequest;
 import com.yomou.entity.UserEntity;
 import com.yomou.util.PasswordHashingUtil;
 import com.yomou.util.JwtGenerator;
 
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class UserService {
     private final PasswordHashingUtil passwordHashingUtil;
     private final JwtGenerator jwtGenerator;
 
-    public ResponseEntity<Object> createUser(UserDto dto) {
+    public ResponseEntity<Object> createUser(UserRequest dto) {
         UserEntity user = new UserEntity();
         user.setUserName(dto.getUserName());
         user.setPassword(passwordHashingUtil.encodePassword(dto.getPassword()));

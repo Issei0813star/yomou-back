@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.yomou.entity.UserEntity;
-import com.yomou.dto.UserDto;
+import com.yomou.dto.UserRequest;
 import com.yomou.repository.UserRepository;
 import com.yomou.util.PasswordHashingUtil;
 import com.yomou.util.JwtGenerator;
@@ -24,7 +24,7 @@ public class AuthService{
     private final PasswordHashingUtil passwordHashingUtil;
     private final JwtGenerator jwtGenerator;
 
-    public ResponseEntity<Object> login (UserDto dto){
+    public ResponseEntity<Object> login (UserRequest dto){
         try{
             UserEntity user = findUserByEmail(dto.getEmail());
             verifyPassword(dto.getPassword(), user.getPassword());
