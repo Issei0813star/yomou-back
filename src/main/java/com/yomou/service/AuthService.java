@@ -1,6 +1,6 @@
 package com.yomou.service;
 
-import com.yomou.dto.LoginDto;
+import com.yomou.dto.LoginRequestDto;
 import com.yomou.exception.YomouException;
 import com.yomou.exception.YomouMessage;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class AuthService{
     private final PasswordHashingUtil passwordHashingUtil;
     private final JwtGenerator jwtGenerator;
 
-    public Object login (LoginDto request){
+    public Object login (LoginRequestDto request){
 
         UserEntity user = findUser(request.getUserId());
         if(Objects.isNull(user)){
@@ -43,6 +43,11 @@ public class AuthService{
         return  userRepository.findUser(userId);
     }
 
+    /**
+     * @param plainPassword String
+     * @param hashedPassword String
+     * @return Boolean
+     */
     private Boolean verifyPassword(String plainPassword, String hashedPassword) {
         return passwordHashingUtil.verifyPassword(plainPassword, hashedPassword);
     }

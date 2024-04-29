@@ -5,17 +5,17 @@ import lombok.Data;
 import lombok.NonNull;
 
 @Data
-public class LoginDto {
+public class UserRegistrationRequestDto {
 
     @NonNull
     @JsonProperty
-    /*
-     * email or userName
-     */
-    private String userId;
+    private String userName;
 
     @NonNull
     @JsonProperty
     private String password;
 
+    @NonNull
+    @JsonProperty
+    private String email;
 }

@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
 
-import com.yomou.dto.UserRequest;
+import com.yomou.dto.UserRegistrationRequestDto;
 import com.yomou.service.UserService;
 import com.yomou.entity.UserEntity;
 import com.yomou.util.JwtGenerator;
@@ -49,9 +49,9 @@ public class UserServiceTest {
 
         when(jwtGenerator.generateToken(any(UserEntity.class))).thenReturn("testToken");
 
-        UserRequest userRequest = new UserRequest("test", "Password", "unique@test.com");
+        UserRegistrationRequestDto userRegistrationRequestDto = new UserRegistrationRequestDto("test", "Password", "unique@test.com");
 
-        ResponseEntity<Object> response = userService.createUser(userRequest);
+        ResponseEntity<Object> response = userService.createUser(userRegistrationRequestDto);
 
         assertEquals(200, response.getStatusCode().value());
     }

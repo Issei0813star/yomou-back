@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.yomou.repository.UserRepository;
-import com.yomou.dto.UserRequest;
+import com.yomou.dto.UserRegistrationRequestDto;
 import com.yomou.entity.UserEntity;
 import com.yomou.util.PasswordHashingUtil;
 import com.yomou.util.JwtGenerator;
@@ -22,7 +22,7 @@ public class UserService {
     private final PasswordHashingUtil passwordHashingUtil;
     private final JwtGenerator jwtGenerator;
 
-    public ResponseEntity<Object> createUser(UserRequest dto) {
+    public ResponseEntity<Object> createUser(UserRegistrationRequestDto dto) {
         if(checkIsEmailUnique(dto.getEmail()))
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error_message", dto.getEmail()+ "はすでに登録されています"));
         UserEntity user = new UserEntity();
