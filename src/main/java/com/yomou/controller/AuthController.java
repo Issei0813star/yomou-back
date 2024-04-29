@@ -1,5 +1,6 @@
 package com.yomou.controller;
 
+import com.yomou.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +19,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody UserRequest dto){
-        return authService.login(dto);
+    public Object login(@RequestBody LoginDto request){
+        return authService.login(request);
     }
 
 }

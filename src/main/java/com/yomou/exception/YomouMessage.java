@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum YomouMessage {
 
+    USER_NOT_FOUND("ユーザーが存在しません。", HttpStatus.NOT_FOUND),
+    INCORRECT_PASSWORD("パスワードが間違っています。", HttpStatus.UNAUTHORIZED);
+
     private String message;
     private HttpStatus status;
 

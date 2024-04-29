@@ -1,20 +1,18 @@
 package com.yomou.service;
 
-import com.yomou.exception.IncorrectPasswordException;
-import com.yomou.exception.UserNotFoundException;
+import com.yomou.dto.LoginDto;
+import com.yomou.exception.YomouException;
+import com.yomou.exception.YomouMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.yomou.entity.UserEntity;
-import com.yomou.dto.UserRequest;
 import com.yomou.repository.UserRepository;
 import com.yomou.util.PasswordHashingUtil;
 import com.yomou.util.JwtGenerator;
 
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -24,29 +22,28 @@ public class AuthService{
     private final PasswordHashingUtil passwordHashingUtil;
     private final JwtGenerator jwtGenerator;
 
-    public ResponseEntity<Object> login (UserRequest dto){
-        try{
-            UserEntity user = findUserByEmail(dto.getEmail());
-            verifyPassword(dto.getPassword(), user.getPassword());
-            String token = jwtGenerator.generateToken(user);
-            return ResponseEntity.ok().body(Map.of("token", token));
+    public Object login (LoginDto request){
+
+        UserEntity user = findUser(request.getUserId());
+        if(Objects.isNull(user)){
+            throw new YomouException(YomouMessage.USER_NOT_FOUND, request);
         }
-        catch (UserNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("errorMessage", "ユーザーが存在しません。: " + dto.getUserName()));
+        if(Boolean.FALSE.equals(verifyPassword(request.getPassword(), user.getPassword()))){
+            throw new YomouException(YomouMessage.INCORRECT_PASSWORD, request);
         }
-        catch (IncorrectPasswordException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("errorMessage", "パスワードが間違っています。"));
-        }
+        String token =  jwtGenerator.generateToken(user);
+        return Map.of("token", token, "userName", user.getUserName(), "email", user.getEmail());
     }
 
-    private UserEntity findUserByEmail(String email){
-        Optional<UserEntity> userOptional = userRepository.findByEmail(email);
-        return userOptional.orElseThrow(() -> new UserNotFoundException("ユーザーが存在しません: " + email));
+    /**
+     * @param userId String
+     * @return UserEntity
+     */
+    private UserEntity findUser(String userId){
+        return  userRepository.findUser(userId);
     }
 
-    private void verifyPassword(String plainPassword, String hashedPassword) {
-        if (!passwordHashingUtil.verifyPassword(plainPassword, hashedPassword)) {
-            throw new IncorrectPasswordException("パスワードが間違っています");
-        }
+    private Boolean verifyPassword(String plainPassword, String hashedPassword) {
+        return passwordHashingUtil.verifyPassword(plainPassword, hashedPassword);
     }
 }
