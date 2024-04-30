@@ -1,6 +1,7 @@
 package com.yomou.serviceTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import com.yomou.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
+
+import java.util.Map;
 
 public class UserServiceTest {
 
@@ -38,22 +41,23 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testCreateUser_WhenEmailIsUnique_ReturnsToken() {
-
+    public void testCreateUser_WhenUnique_Success() {
         when(passwordHashingUtil.encodePassword(anyString())).thenReturn("encodedPassword");
 
-        when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
+        when(userRepository.existsByEmail("unique@test.com")).thenReturn(false);
+        when(userRepository.existsByUserName("unique")).thenReturn(false);
 
-        UserEntity userEntity = new UserEntity(0L, "test", "password", "unique@test.com");
-        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+        UserEntity savedUserEntity = new UserEntity(1L, "unique", "encodedPassword", "unique@test.com");
+        when(userRepository.save(any(UserEntity.class))).thenReturn(savedUserEntity);
 
-        when(jwtGenerator.generateToken(any(UserEntity.class))).thenReturn("testToken");
+        UserRegistrationRequestDto userRegistrationRequestDto = new UserRegistrationRequestDto("unique", "Password", "unique@test.com");
+        Map<String, Object> createdUser = userService.createUser(userRegistrationRequestDto);
 
-        UserRegistrationRequestDto userRegistrationRequestDto = new UserRegistrationRequestDto("test", "Password", "unique@test.com");
-
-        ResponseEntity<Object> response = userService.createUser(userRegistrationRequestDto);
-
-        assertEquals(200, response.getStatusCode().value());
+        assertNotNull(createdUser);
+        assertEquals("unique", createdUser.get("userName"));
+        assertEquals("unique@test.com", createdUser.get("email"));
+        assertEquals("encodedPassword", createdUser.get("password"));
     }
+
 }
 

@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 public enum YomouMessage {
 
     USER_NOT_FOUND("ユーザーが存在しません。", HttpStatus.NOT_FOUND),
-    INCORRECT_PASSWORD("パスワードが間違っています。", HttpStatus.UNAUTHORIZED);
+    INCORRECT_PASSWORD("パスワードが間違っています。", HttpStatus.UNAUTHORIZED),
+    EMAIL_NOT_UNIQUE("指定されたメールアドレスは既に登録されています。", HttpStatus.CONFLICT),
+    USER_NAME_NOT_UNIQUE("指定されたユーザー名は既に存在します。別のユーザー名で登録してください。", HttpStatus.CONFLICT);
 
     private String message;
     private HttpStatus status;
