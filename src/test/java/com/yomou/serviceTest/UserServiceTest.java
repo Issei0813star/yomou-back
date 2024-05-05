@@ -1,17 +1,13 @@
 package com.yomou.serviceTest;
 
-import com.github.springtestdbunit.annotation.DatabaseOperation;
-import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.yomou.dto.UserRegistrationRequestDto;
-import com.yomou.entity.UserEntity;
 import com.yomou.exception.YomouException;
 import com.yomou.repository.UserRepository;
 import com.yomou.service.UserService;
 import com.yomou.util.JwtGenerator;
 import com.yomou.util.PasswordHashingUtil;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
