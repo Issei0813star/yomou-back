@@ -28,6 +28,9 @@ public class AuthService{
         if(Objects.isNull(user)){
             throw new YomouException(YomouMessage.USER_NOT_FOUND, request);
         }
+        if(Boolean.FALSE.equals(user.getVerified())){
+            throw new YomouException(YomouMessage.USER_NOT_VERIFIED, user.getEmail());
+        }
         if(Boolean.FALSE.equals(verifyPassword(request.getPassword(), user.getPassword()))){
             throw new YomouException(YomouMessage.INCORRECT_PASSWORD, request);
         }

@@ -27,4 +27,6 @@ public class UserEntity {
     @Column(name = "email", unique = true)
     private String email;
 
+    @Column(name = "verified")
+    private Boolean verified;
 }
