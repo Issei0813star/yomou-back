@@ -1,13 +1,15 @@
 package com.yomou.serviceTest;
 
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.yomou.dto.UserRegistrationRequestDto;
 import com.yomou.exception.YomouException;
 import com.yomou.repository.UserRepository;
+import com.yomou.service.AsyncSendGridService;
 import com.yomou.service.UserService;
-import com.yomou.util.JwtGenerator;
 import com.yomou.util.PasswordHashingUtil;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,10 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import com.github.springtestdbunit.DbUnitTestExecutionListener;
-import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.AfterTransaction;
@@ -60,12 +58,12 @@ public class UserServiceTest {
     private PasswordHashingUtil passwordHashingUtil;
 
     @MockBean
-    private JwtGenerator jwtGenerator;
+    private AsyncSendGridService sendGridService;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.userService = new UserService(userRepository, passwordHashingUtil,jwtGenerator);
+        this.userService = new UserService(userRepository, passwordHashingUtil,sendGridService);
     }
 
 
