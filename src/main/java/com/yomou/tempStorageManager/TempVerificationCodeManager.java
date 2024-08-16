@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,6 +25,27 @@ public class TempVerificationCodeManager {
         Map<String, Instant> verificationCodeMap =  this.tempUserVerificationCodeMap.computeIfAbsent(userId, id -> createVerificationCodeMap());
 
         return verificationCodeMap.keySet().stream().findFirst().orElse("");
+    }
+
+    /**
+     * 認証コードが正しいかをチェック
+     * @param verificationCode String
+     * @param userId Long
+     * @return boolean
+     */
+    public boolean verifyCode(String verificationCode, Long userId) {
+        Map<String, Instant> verificationCodeMap = this.tempUserVerificationCodeMap.get(userId);
+        if(Objects.isNull(verificationCodeMap)) {
+            return false;
+        }
+
+        Instant expiration = verificationCodeMap.get(verificationCode);
+
+        if(Objects.isNull(expiration)) {
+            return false;
+        }
+
+        return expiration.isAfter(Instant.now());
     }
 
     private Map<String, Instant> createVerificationCodeMap() {

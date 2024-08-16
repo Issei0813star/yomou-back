@@ -1,8 +1,10 @@
 package com.yomou.service;
 
 import com.yomou.dto.LoginRequestDto;
+import com.yomou.dto.VerifyUserEmailRequestDto;
 import com.yomou.exception.YomouException;
 import com.yomou.exception.YomouMessage;
+import com.yomou.tempStorageManager.TempVerificationCodeManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class AuthService{
     private final UserRepository userRepository;
     private final PasswordHashingUtil passwordHashingUtil;
     private final JwtGenerator jwtGenerator;
+    private final TempVerificationCodeManager verificationCodeManager;
 
     public Object login (LoginRequestDto request){
 
@@ -36,6 +39,21 @@ public class AuthService{
         }
         String token =  jwtGenerator.generateToken(user);
         return Map.of("token", token, "userName", user.getUserName(), "email", user.getEmail());
+    }
+
+    public void verifyUserEmail(VerifyUserEmailRequestDto request) {
+        UserEntity user = userRepository.findUser(request.getUserEmail());
+        if(Objects.isNull(user)){
+            throw new YomouException(YomouMessage.USER_NOT_FOUND, request);
+        }
+
+
+        if(!verificationCodeManager.verifyCode(request.getVerificationCode(), user.getId())){
+            throw new YomouException(YomouMessage.VERIFICATION_CODE_ARE_INVALID, request);
+        }
+
+        user.setVerified(true);
+        userRepository.save(user);
     }
 
     /**

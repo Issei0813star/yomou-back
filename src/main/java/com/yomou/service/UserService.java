@@ -30,7 +30,7 @@ public class UserService {
 
         UserEntity createdUser = userRepository.save(user);
         sendGridService.asyncSendEmail(createdUser);
-        return Map.of("userName", createdUser.getUserName(), "email", createdUser.getEmail(), "password", createdUser.getPassword());
+        return Map.of("userId", createdUser.getId(), "userName", createdUser.getUserName(), "email", createdUser.getEmail(), "password", createdUser.getPassword());
     }
 
     private void checkIsUserUnique(UserRegistrationRequestDto dto){

@@ -1,6 +1,7 @@
 package com.yomou.controller;
 
 import com.yomou.dto.LoginRequestDto;
+import com.yomou.dto.VerifyUserEmailRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,11 @@ public class AuthController {
     @PostMapping("/login")
     public Object login(@RequestBody LoginRequestDto request){
         return authService.login(request);
+    }
+
+    @PostMapping("/verify")
+    public void verifyUserEmail(@RequestBody VerifyUserEmailRequestDto request) {
+        authService.verifyUserEmail(request);
     }
 
 }
