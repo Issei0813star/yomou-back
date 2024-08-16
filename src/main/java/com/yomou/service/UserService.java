@@ -5,6 +5,7 @@ import com.yomou.entity.UserEntity;
 import com.yomou.exception.YomouException;
 import com.yomou.exception.YomouMessage;
 import com.yomou.repository.UserRepository;
+import com.yomou.service.async.AsyncSendGridService;
 import com.yomou.util.PasswordHashingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class UserService {
         user.setEmail(dto.getEmail());
 
         UserEntity createdUser = userRepository.save(user);
-        sendGridService.asyncSendEmail(dto.getEmail());
+        sendGridService.asyncSendEmail(createdUser);
         return Map.of("userName", createdUser.getUserName(), "email", createdUser.getEmail(), "password", createdUser.getPassword());
     }
 

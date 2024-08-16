@@ -7,7 +7,7 @@ import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.yomou.dto.UserRegistrationRequestDto;
 import com.yomou.exception.YomouException;
 import com.yomou.repository.UserRepository;
-import com.yomou.service.AsyncSendGridService;
+import com.yomou.service.async.AsyncSendGridService;
 import com.yomou.service.UserService;
 import com.yomou.util.PasswordHashingUtil;
 import org.junit.jupiter.api.BeforeEach;
