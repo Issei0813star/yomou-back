@@ -48,6 +48,10 @@ public class TempVerificationCodeManager {
         return expiration.isAfter(Instant.now());
     }
 
+    public void removeCode(Long userId) {
+        this.tempUserVerificationCodeMap.remove(userId);
+    }
+
     private Map<String, Instant> createVerificationCodeMap() {
         return Map.of(createVerificationCode(), getExpiration());
     }

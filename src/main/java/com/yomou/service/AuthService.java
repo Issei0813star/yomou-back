@@ -54,6 +54,8 @@ public class AuthService{
 
         user.setVerified(true);
         userRepository.save(user);
+
+        verificationCodeManager.removeCode(user.getId());
     }
 
     /**
