@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TempVerificationCodeManager {
     // Map<userId, 認証コード>
     private final ConcurrentHashMap<Long, VerificationCodeDto> tempUserVerificationCodeMap = new ConcurrentHashMap<>();
+    private final Random random = new Random();
 
     /**
      * userIdを渡すと、認証コードを生成して返す。すでにある場合はコードは再生成され、新しいものになる
@@ -47,8 +48,7 @@ public class TempVerificationCodeManager {
     }
 
     private String createVerificationCode() {
-        Random random = new Random();
-        int code = 100000 + random.nextInt(900000);
+        int code = 100000 + this.random.nextInt(900000);
         return String.valueOf(code);
     }
 
