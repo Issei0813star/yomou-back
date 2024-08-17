@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Entity
@@ -35,7 +36,8 @@ public class Post {
     private String content;
 
     @Column(name = "recommend_target")
-    private String recommendTarget;
+    @Convert(converter = JsonbNumericArrayConverter.class)
+    private List<Integer> recommendTarget;
 
     @Column(name = "posted_at")
     private Timestamp postedAt;
