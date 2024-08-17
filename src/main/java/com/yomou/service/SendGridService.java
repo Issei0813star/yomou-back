@@ -7,7 +7,7 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.yomou.entity.UserEntity;
-import com.yomou.tempStorageManager.TempVerificationCodeManager;
+import com.yomou.tempstorage.manager.TempVerificationCodeManager;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

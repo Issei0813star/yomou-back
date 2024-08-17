@@ -4,7 +4,7 @@ import com.yomou.dto.LoginRequestDto;
 import com.yomou.dto.VerifyUserEmailRequestDto;
 import com.yomou.exception.YomouException;
 import com.yomou.exception.YomouMessage;
-import com.yomou.tempStorageManager.TempVerificationCodeManager;
+import com.yomou.tempstorage.manager.TempVerificationCodeManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

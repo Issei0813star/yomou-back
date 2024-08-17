@@ -1,11 +1,12 @@
-package com.yomou.tempStorageManager;
+package com.yomou.tempstorage.manager;
 
+import com.yomou.tempstorage.dto.VerificationCodeDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,8 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @RequiredArgsConstructor
 public class TempVerificationCodeManager {
-    //Map<userId, <認証コード, 有効期限>>
-    private final ConcurrentHashMap<Long, Map<String, Instant>> tempUserVerificationCodeMap = new ConcurrentHashMap<>();
+    //Map<userId, 認証コード>
+    private final ConcurrentHashMap<Long, VerificationCodeDto> tempUserVerificationCodeMap = new ConcurrentHashMap<>();
 
     /**
      * userIdを渡すと、認証コードを生成して返す。すでにある場合はコードは再生成され、新しいものになる
@@ -23,8 +24,8 @@ public class TempVerificationCodeManager {
      */
     public String getVerificationCode(Long userId) {
         String verificationCode = this.createVerificationCode();
-        Map<String, Instant> verificationCodeMap = Map.of(verificationCode, this.getExpiration());
-        this.tempUserVerificationCodeMap.put(userId, verificationCodeMap);
+        VerificationCodeDto dto = new VerificationCodeDto(verificationCode, this.getExpiration());
+        this.tempUserVerificationCodeMap.put(userId, dto);
 
         return verificationCode;
     }
@@ -36,12 +37,12 @@ public class TempVerificationCodeManager {
      * @return boolean
      */
     public boolean verifyCode(String verificationCode, Long userId) {
-        Map<String, Instant> verificationCodeMap = this.tempUserVerificationCodeMap.get(userId);
-        if(Objects.isNull(verificationCodeMap)) {
+        VerificationCodeDto dto = this.tempUserVerificationCodeMap.get(userId);
+        if(Objects.isNull(dto)) {
             return false;
         }
 
-        Instant expiration = verificationCodeMap.get(verificationCode);
+        Instant expiration = dto.getExpiration();
 
         if(Objects.isNull(expiration)) {
             return false;
@@ -63,5 +64,11 @@ public class TempVerificationCodeManager {
     private Instant getExpiration () {
         Instant now = Instant.now();
         return now.plus(Duration.ofMinutes(30));
+    }
+
+    @Scheduled(fixedRate = 1800000)
+    private void removeCodeScheduled() {
+        Instant now = Instant.now();
+        this.tempUserVerificationCodeMap.entrySet().removeIf(entry -> now.isAfter(entry.getValue().getExpiration()));
     }
 }
