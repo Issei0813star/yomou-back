@@ -7,12 +7,12 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.yomou.entity.UserEntity;
+import com.yomou.exception.YomouException;
+import com.yomou.exception.YomouMessage;
 import com.yomou.tempstorage.manager.TempVerificationCodeManager;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service
 public class SendGridService {
@@ -32,8 +32,7 @@ public class SendGridService {
         Email to = new Email(user.getEmail());
         String verificationCode = verificationCodeManager.getVerificationCode(user.getId());
         if(StringUtils.isBlank(verificationCode)) {
-            //TODO 予期せぬ例外
-            return;
+            throw new YomouException(YomouMessage.SEND_MAIL_FAILURE, "get verification code failure");
         }
         Content content = new Content("text/plain", "認証コード:" + verificationCode);
         Mail mail = new Mail(from, subject, to, content);
@@ -45,12 +44,8 @@ public class SendGridService {
             request.setBody(mail.build());
             sendGrid.api(request);
         }
-        catch (IOException ex) {
-            //TODO fix exception
-            ex.printStackTrace();
-        }
         catch (Exception e) {
-            e.printStackTrace();
+            throw new YomouException(YomouMessage.SEND_MAIL_FAILURE, e);
         }
     }
 }
