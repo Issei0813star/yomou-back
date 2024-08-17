@@ -30,7 +30,7 @@ public class SendGridService {
         Email from = new Email("issei0813star.dev@gmail.com");
         String subject = "メールアドレス認証";
         Email to = new Email(user.getEmail());
-        String verificationCode = verificationCodeManager.getTempVerificationCode(user.getId());
+        String verificationCode = verificationCodeManager.getVerificationCode(user.getId());
         if(StringUtils.isBlank(verificationCode)) {
             //TODO 予期せぬ例外
             return;

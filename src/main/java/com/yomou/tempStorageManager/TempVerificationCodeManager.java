@@ -17,14 +17,16 @@ public class TempVerificationCodeManager {
     private final ConcurrentHashMap<Long, Map<String, Instant>> tempUserVerificationCodeMap = new ConcurrentHashMap<>();
 
     /**
-     * userIdを渡すと、認証コードを生成or取得して返す
+     * userIdを渡すと、認証コードを生成して返す。すでにある場合はコードは再生成され、新しいものになる
      * @param userId Long
      * @return String
      */
-    public String getTempVerificationCode(Long userId) {
-        Map<String, Instant> verificationCodeMap =  this.tempUserVerificationCodeMap.computeIfAbsent(userId, id -> createVerificationCodeMap());
+    public String getVerificationCode(Long userId) {
+        String verificationCode = this.createVerificationCode();
+        Map<String, Instant> verificationCodeMap = Map.of(verificationCode, this.getExpiration());
+        this.tempUserVerificationCodeMap.put(userId, verificationCodeMap);
 
-        return verificationCodeMap.keySet().stream().findFirst().orElse("");
+        return verificationCode;
     }
 
     /**
@@ -50,10 +52,6 @@ public class TempVerificationCodeManager {
 
     public void removeCode(Long userId) {
         this.tempUserVerificationCodeMap.remove(userId);
-    }
-
-    private Map<String, Instant> createVerificationCodeMap() {
-        return Map.of(createVerificationCode(), getExpiration());
     }
 
     private String createVerificationCode() {
