@@ -1,5 +1,6 @@
 package com.yomou.entity;
 
+import com.yomou.entity.converter.JsonbNumericArrayConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.yomou.entity;
+package com.yomou.entity.converter;
 
 
 import com.fasterxml.jackson.core.type.TypeReference;

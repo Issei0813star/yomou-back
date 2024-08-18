@@ -1,6 +1,6 @@
 package com.yomou.util;
 
-import com.yomou.entity.UserEntity;
+import com.yomou.entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ public class JwtGenerator {
     private String SECRET_KEY;
 
 
-    public String generateToken(UserEntity user) {
+    public String generateToken(User user) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + 864000000);
 

@@ -6,7 +6,7 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
-import com.yomou.entity.UserEntity;
+import com.yomou.entity.User;
 import com.yomou.exception.YomouException;
 import com.yomou.exception.YomouMessage;
 import com.yomou.tempstorage.manager.TempVerificationCodeManager;
@@ -25,7 +25,7 @@ public class SendGridService {
         this.verificationCodeManager = verificationCodeManager;
     }
 
-    public void sendEmail(UserEntity user) {
+    public void sendEmail(User user) {
         //TODO 送信元メールアドレスを本番用に
         Email from = new Email("issei0813star.dev@gmail.com");
         String subject = "メールアドレス認証";

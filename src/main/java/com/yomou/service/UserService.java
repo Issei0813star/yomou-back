@@ -1,7 +1,7 @@
 package com.yomou.service;
 
 import com.yomou.dto.UserRegistrationRequestDto;
-import com.yomou.entity.UserEntity;
+import com.yomou.entity.User;
 import com.yomou.exception.YomouException;
 import com.yomou.exception.YomouMessage;
 import com.yomou.repository.UserRepository;
@@ -23,12 +23,12 @@ public class UserService {
 
     public Map<String, Object> createUser(UserRegistrationRequestDto dto) {
         checkIsUserUnique(dto);
-        UserEntity user = new UserEntity();
+        User user = new User();
         user.setUserName(dto.getUserName());
         user.setPassword(passwordHashingUtil.encodePassword(dto.getPassword()));
         user.setEmail(dto.getEmail());
 
-        UserEntity createdUser = userRepository.save(user);
+        User createdUser = userRepository.save(user);
         sendGridService.asyncSendEmail(createdUser);
         return Map.of("userId", createdUser.getId(), "userName", createdUser.getUserName(), "email", createdUser.getEmail(), "password", createdUser.getPassword());
     }

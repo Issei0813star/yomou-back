@@ -8,7 +8,7 @@ import com.yomou.tempstorage.manager.TempVerificationCodeManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.yomou.entity.UserEntity;
+import com.yomou.entity.User;
 import com.yomou.repository.UserRepository;
 import com.yomou.util.PasswordHashingUtil;
 import com.yomou.util.JwtGenerator;
@@ -27,7 +27,7 @@ public class AuthService{
 
     public Object login (LoginRequestDto request){
 
-        UserEntity user = findUser(request.getUserId());
+        User user = findUser(request.getUserId());
         if(Objects.isNull(user)){
             throw new YomouException(YomouMessage.USER_NOT_FOUND, request);
         }
@@ -42,7 +42,7 @@ public class AuthService{
     }
 
     public void verifyUserEmail(VerifyUserEmailRequestDto request) {
-        UserEntity user = userRepository.findUser(request.getUserEmail());
+        User user = userRepository.findUser(request.getUserEmail());
         if(Objects.isNull(user)){
             throw new YomouException(YomouMessage.USER_NOT_FOUND, request);
         }
@@ -62,7 +62,7 @@ public class AuthService{
      * @param userId String
      * @return UserEntity
      */
-    private UserEntity findUser(String userId){
+    private User findUser(String userId){
         return  userRepository.findUser(userId);
     }
 
